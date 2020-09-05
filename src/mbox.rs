@@ -685,7 +685,7 @@ fn test_iter_drop() {
 #[test]
 fn test_zst_slice() {
     let slice = repeat(()).take(7).collect::<MBox<[_]>>();
-    slice.clone();
+    let _ = slice.clone();
     slice.into_iter();
 }
 
@@ -693,7 +693,7 @@ fn test_zst_slice() {
 #[should_panic(expected="panic on clone")]
 fn test_panic_during_clone() {
     let mbox = MBox::<PanicOnClone>::default();
-    mbox.clone();
+    let _ = mbox.clone();
 }
 
 #[test]
@@ -805,7 +805,7 @@ fn test_default_str() {
 #[should_panic(expected="panic on clone")]
 fn test_panic_on_clone_slice() {
     let mbox: MBox<[PanicOnClone]> = once(PanicOnClone::default()).collect();
-    mbox.clone();
+    let _ = mbox.clone();
 }
 
 //}}}
