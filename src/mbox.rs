@@ -727,7 +727,7 @@ impl MBox<str> {
     /// valid UTF-8, this method returns an `Err`.
     pub unsafe fn from_raw_utf8_parts(value: *mut u8, len: usize) -> Result<MBox<str>, Utf8Error>  {
         let bytes = from_raw_parts(value, len);
-        let string = try!(from_utf8(bytes)) as *const str as *mut str;
+        let string = from_utf8(bytes)? as *const str as *mut str;
         Ok(Self::from_raw(string))
     }
 
