@@ -146,7 +146,7 @@ impl MString {
             let len = string.len();
             let ptr = gen_malloc(len + 1);
             copy_nonoverlapping(string.as_ptr(), ptr, len);
-            *ptr.offset(len as isize) = 0;
+            *ptr.add(len) = 0;
             MString(MBox::from_raw_utf8_parts_unchecked(ptr, len + 1))
         }
     }

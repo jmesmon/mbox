@@ -351,7 +351,7 @@ impl<T> MSliceBuilder<T> {
                 self.cap *= 2;
                 self.ptr = gen_realloc(self.ptr, self.cap);
             }
-            write(self.ptr.offset(self.len as isize), obj);
+            write(self.ptr.add(self.len), obj);
             self.len += 1;
         }
     }
@@ -388,7 +388,7 @@ impl<T> Iterator for MSliceIntoIter<T> {
             None
         } else {
             unsafe {
-                let ptr = self.ptr.offset(self.begin as isize);
+                let ptr = self.ptr.add(self.begin);
                 self.begin += 1;
                 Some(read(ptr))
             }
@@ -408,7 +408,7 @@ impl<T> DoubleEndedIterator for MSliceIntoIter<T> {
         } else {
             unsafe {
                 self.end -= 1;
-                let ptr = self.ptr.offset(self.end as isize);
+                let ptr = self.ptr.add(self.end);
                 Some(read(ptr))
             }
         }
@@ -423,7 +423,7 @@ impl<T> ExactSizeIterator for MSliceIntoIter<T> {}
 impl<T> Drop for MSliceIntoIter<T> {
     fn drop(&mut self) {
         unsafe {
-            let base = self.ptr.offset(self.begin as isize);
+            let base = self.ptr.add(self.begin);
             let len = self.end - self.begin;
             let slice = from_raw_parts_mut(base, len) as *mut [T];
             drop_in_place(slice);
